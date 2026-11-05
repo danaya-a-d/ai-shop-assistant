@@ -84,13 +84,12 @@ def build_return_answer(
     if day is None or day < 1:
         return SAFE_RESPONSES["return"]
 
-    # В пределах срока обычного возврата
+    # в пределах срока обычного возврата
     if day <= RETURN_PERIOD_DAYS:
         return (
             f"Если товар без брака, на {day}-й день "
-            f"его можно вернуть: срок возврата составляет "
-            f"{RETURN_PERIOD_DAYS} дней, в том числе "
-            "для вскрытого товара."
+            "его можно вернуть, даже если упаковка вскрыта. "
+            + SHOP_FACTS["return"]
         )
 
     # срок обычного возврата истек
