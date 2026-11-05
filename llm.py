@@ -5,14 +5,20 @@ from dotenv import load_dotenv
 from groq import AsyncGroq
 from prompts import CLASSIFIER_PROMPT
 from response_policy import SAFE_RESPONSES, build_safe_answer
-
+from typing import TypedDict
 
 load_dotenv()
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 
-async def classify_question(question: str) -> list[str]:
+class ClassificationResult(TypedDict):
+    topics: list[str]
+    return_day: int | None
+    product_condition: str
+
+
+async def classify_question(question: str) -> ClassificationResult:
     if not GROQ_API_KEY:
         raise ValueError("GROQ_API_KEY is not set")
 
