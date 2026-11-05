@@ -5,10 +5,13 @@ from aiogram import Bot, Dispatcher, F
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 from dotenv import load_dotenv
+import logging
 
 
 # загружаем переменные окружения
 load_dotenv()
+
+logger = logging.getLogger(__name__)
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 
@@ -29,7 +32,7 @@ async def start_handler(message: Message):
     )
 
 
-# обработчик обычных текстовых сообщений
+# обработчик текстовых сообщений
 @dp.message(F.text)
 async def message_handler(message: Message):
     try:
@@ -37,6 +40,8 @@ async def message_handler(message: Message):
         await message.answer(answer)
 
     except Exception:
+        logger.exception("Failed to process message")
+
         await message.answer(
             "Извините, сейчас не удалось обработать запрос. "
             "Попробуйте немного позже."
@@ -44,8 +49,17 @@ async def message_handler(message: Message):
 
 
 
+
 # запуск бота
+
 async def main():
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+    )
+
+    logger.info("Starting AI Shop Assistant")
+
     async with Bot(token=BOT_TOKEN) as bot:
         await dp.start_polling(bot)
 
